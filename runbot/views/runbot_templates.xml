@@ -1,234 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<openerp>
-<data>
-    <menuitem id="menu_runbot_top" name="Runbot"/>
-    <menuitem id="menu_runbot" name="Runbot" parent="menu_runbot_top"/>
-
-    <!-- repos -->
-    <record id="view_repo_form" model="ir.ui.view">
-        <field name="model">runbot.repo</field>
-        <field name="arch" type="xml">
-            <form string="repos" version="7.0">
-                <sheet>
-                    <div class="oe_title">
-                        <label for="name" class="oe_edit_only"/>
-                        <h1><field name="name" class="oe_inline"/></h1>
-                        <button name="update" type="object" string="Update" groups="runbot.group_runbot_admin"/>
-                        <button name="cron" type="object" string="Cron" groups="runbot.group_runbot_admin"/>
-                    </div>
-                    <group string="Params">
-                        <field name="sequence"/>
-                        <field name="mode"/>
-                        <field name="nginx"/>
-                        <field name="duplicate_id"/>
-                        <field name="dependency_ids" widget="many2many_tags"/>
-                        <field name="modules"/>
-                        <field name="modules_auto"/>
-                        <field name="token"/>
-                        <field name="group_ids" widget="many2many_tags"/>
-                        <field name="hook_time" readonly="1"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-    <record id="view_repo_tree" model="ir.ui.view">
-        <field name="model">runbot.repo</field>
-        <field name="arch" type="xml">
-            <tree string="repos">
-                <field name="sequence" widget="handle"/>
-                <field name="name"/>
-                <field name="mode"/>
-            </tree>
-        </field>
-    </record>
-    <record id="action_repo_form" model="ir.actions.act_window">
-        <field name="name">Repositories</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">runbot.repo</field>
-        <field name="view_type">form</field>
-    </record>
-    <menuitem id="menu_repo_form" action="action_repo_form" parent="menu_runbot"/>
-
-    <!-- Branches -->
-    <record id="view_branch_form" model="ir.ui.view">
-        <field name="model">runbot.branch</field>
-        <field name="arch" type="xml">
-            <form string="Branch" version="7.0">
-                <sheet>
-                    <group>
-                        <field name="repo_id"/>
-                        <field name="name"/>
-                        <field name="branch_name"/>
-                        <field name="branch_url"/>
-                        <field name="pull_head_name"/>
-                        <field name="sticky"/>
-                        <field name="job_timeout"/>
-                        <field name="state"/>
-                        <field name="modules"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-    <record id="view_branch_tree" model="ir.ui.view">
-        <field name="model">runbot.branch</field>
-        <field name="arch" type="xml">
-            <tree string="Branches">
-                <field name="repo_id"/>
-                <field name="name"/>
-                <field name="sticky"/>
-                <field name="state"/>
-            </tree>
-        </field>
-    </record>
-    <record id="view_branch_search" model="ir.ui.view">
-        <field name="model">runbot.branch</field>
-        <field name="arch" type="xml">
-            <search string="Search builds">
-                <field name="name"/>
-                <field name="state"/>
-                <filter string="Sticky" domain="[('sticky','=', True)]"/>
-                <separator />
-                <group expand="0" string="Group By...">
-                    <filter string="Repo" domain="[]" context="{'group_by':'repo_id'}"/>
-                    <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
-    <record id="action_branch" model="ir.actions.act_window">
-        <field name="name">Branches</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">runbot.branch</field>
-        <field name="view_type">form</field>
-    </record>
-    <menuitem id="menu_branch" action="action_branch" parent="menu_runbot"/>
-
-    <!-- Builds -->
-    <record id="view_build_form" model="ir.ui.view">
-        <field name="model">runbot.build</field>
-        <field name="arch" type="xml">
-            <form string="Build" version="7.0">
-                <header>
-                     <button name="reset" type="object" string="Reset"/>
-                </header>
-                <sheet>
-                    <group>
-                        <field name="repo_id"/>
-                        <field name="branch_id"/>
-                        <field name="sequence"/>
-                        <field name="name"/>
-                        <field name="date"/>
-                        <field name="author"/>
-                        <field name="author_email"/>
-                        <field name="committer"/>
-                        <field name="committer_email"/>
-                        <field name="subject"/>
-                        <field name="port"/>
-                        <field name="dest"/>
-                        <field name="state"/>
-                        <field name="result"/>
-                        <field name="pid"/>
-                        <field name="host"/>
-                        <field name="job_start"/>
-                        <field name="job_end"/>
-                        <field name="job_time"/>
-                        <field name="job_age"/>
-                        <field name="duplicate_id"/>
-                        <field name="modules"/>
-                    </group>
-                </sheet>
-            </form>
-        </field>
-    </record>
-    <record id="view_build_tree" model="ir.ui.view">
-        <field name="model">runbot.build</field>
-        <field name="arch" type="xml">
-            <tree string="Builds">
-                <field name="sequence"/>
-                <field name="repo_id"/>
-                <field name="dest"/>
-                <field name="date"/>
-                <field name="author"/>
-                <field name="committer"/>
-                <field name="state"/>
-                <field name="port"/>
-                <field name="job"/>
-                <field name="result"/>
-                <field name="pid"/>
-                <field name="host"/>
-                <field name="job_start"/>
-                <field name="job_time"/>
-                <field name="job_age"/>
-            </tree>
-        </field>
-    </record>
-    <record id="view_build_graph" model="ir.ui.view">
-        <field name="model">runbot.build</field>
-        <field name="arch" type="xml">
-            <graph string="Builds" type="pivot">
-                <field name="create_date" interval="week" type="row"/>
-                <field name="state" type="col"/>
-            </graph>
-        </field>
-    </record>
-    <record id="view_build_search" model="ir.ui.view">
-        <field name="model">runbot.build</field>
-        <field name="arch" type="xml">
-            <search string="Search builds">
-                <field name="branch_id"/>
-                <field name="name"/>
-                <field name="state"/>
-                <field name="dest"/>
-                <separator/>
-                <filter string="Pending" domain="[('state','=', 'pending')]"/>
-                <filter string="Testing" domain="[('state','=', 'testing')]"/>
-                <filter string="Running" domain="[('state','=', 'running')]"/>
-                <filter string="Done" domain="[('state','=','done')]"/>
-                <filter string="Duplicate" domain="[('state','=', 'duplicate')]"/>
-                <filter string="Deathrow" domain="[('state','=', 'deathrow')]"/>
-                <separator />
-                <group expand="0" string="Group By...">
-                    <filter string="Repo" domain="[]" context="{'group_by':'repo_id'}"/>
-                    <filter string="Branch" domain="[]" context="{'group_by':'branch_id'}"/>
-                    <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Result" domain="[]" context="{'group_by':'result'}"/>
-                    <filter string="Start" domain="[]" context="{'group_by':'job_start'}"/>
-                    <filter string="Host" domain="[]" context="{'group_by':'host'}"/>
-                    <filter string="Create Date" domain="[]" context="{'group_by':'create_date'}"/>
-                </group>
-            </search>
-        </field>
-    </record>
-    <record id="action_build" model="ir.actions.act_window">
-        <field name="name">Builds</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">runbot.build</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">graph,tree,form</field>
-    </record>
-    <menuitem id="menu_build" action="action_build" parent="menu_runbot"/>
-
-    <!-- Events -->
-    <record id="logging_action" model="ir.actions.act_window">
-        <field name="name">Events</field>
-        <field name="type">ir.actions.act_window</field>
-        <field name="res_model">ir.logging</field>
-        <field name="view_type">form</field>
-    </record>
-    <menuitem id="logging_menu" action="logging_action" parent="menu_runbot"/>
-
-
-    <!-- Website menu -->
-    <record id="website_menu" model="website.menu">
-        <field name="name">Runbot</field>
-        <field name="url">/runbot</field>
-        <field name="parent_id" ref="website.main_menu"/>
-        <field name="sequence" type="int">1</field>
-    </record>
-
-    <!-- Templates -->
+<odoo>
     <template id="assets_frontend" inherit_id="website.assets_frontend" name="runbot.assets.frontend">
       <xpath expr="." position="inside">
         <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/octicons/2.0.2/octicons.css"/>
@@ -645,37 +416,37 @@
     </template>
 
     <template id="runbot.webclient_config">
-[global]
-server.environment = "development"
-server.socket_host = "0.0.0.0"
-server.socket_port = %d
-server.thread_pool = 10
-tools.sessions.on = True
-log.access_level = "INFO"
-log.error_level = "INFO"
-tools.csrf.on = False
-tools.log_tracebacks.on = False
-tools.cgitb.on = True
-openerp.server.host = 'localhost'
-openerp.server.port = '%d'
-openerp.server.protocol = 'socket'
-openerp.server.timeout = 450
-[openerp-web]
-dblist.filter = 'BOTH'
-dbbutton.visible = True
-company.url = ''
-openerp.server.host = 'localhost'
-openerp.server.port = '%d'
-openerp.server.protocol = 'socket'
-openerp.server.timeout = 450
+    [global]
+    server.environment = "development"
+    server.socket_host = "0.0.0.0"
+    server.socket_port = %d
+    server.thread_pool = 10
+    tools.sessions.on = True
+    log.access_level = "INFO"
+    log.error_level = "INFO"
+    tools.csrf.on = False
+    tools.log_tracebacks.on = False
+    tools.cgitb.on = True
+    openerp.server.host = 'localhost'
+    openerp.server.port = '%d'
+    openerp.server.protocol = 'socket'
+    openerp.server.timeout = 450
+    [openerp-web]
+    dblist.filter = 'BOTH'
+    dbbutton.visible = True
+    company.url = ''
+    openerp.server.host = 'localhost'
+    openerp.server.port = '%d'
+    openerp.server.protocol = 'socket'
+    openerp.server.timeout = 450
     </template>
 
     <template id="runbot.nginx_config">
-pid <t t-esc="nginx_dir"/>/nginx.pid;
-error_log <t t-esc="nginx_dir"/>/error.log;
-worker_processes  1;
-events { worker_connections  1024; }
-http {
+    pid <t t-esc="nginx_dir"/>/nginx.pid;
+    error_log <t t-esc="nginx_dir"/>/error.log;
+    worker_processes  1;
+    events { worker_connections  1024; }
+    http {
     include /etc/nginx/mime.types;
     server_names_hash_max_size 512;
     server_names_hash_bucket_size 256;
@@ -721,7 +492,7 @@ http {
         location /longpolling { proxy_pass http://127.0.0.1:<t t-esc="build.port + 1"/>; }
     }
     </t>
-}
+    }
     </template>
 
     <template id="runbot.badge_default">&lt;?xml version="1.0"?&gt;
@@ -766,20 +537,4 @@ http {
         </g>
       </svg>
     </template>
-</data>
-
-<data noupdate="1">
-    <!-- Cron -->
-    <record model="ir.cron" id="repo_cron">
-        <field name='name'>Runbot Cron</field>
-        <field name='interval_number'>1</field>
-        <field name='interval_type'>minutes</field>
-        <field name="numbercall">-1</field>
-        <field name="doall" eval="False" />
-        <field name="model">runbot.repo</field>
-        <field name="function">_cron</field>
-        <field name="args">()</field>
-    </record>
-</data>
-
-</openerp>
+</odoo>

@@ -10,8 +10,9 @@
         'python': ['matplotlib'],
     },
     'data': [
-        'runbot.xml',
-        'res_config_view.xml',
+        'views/runbot_backend.xml',
+        'views/runbot_templates.xml',
+        'views/res_config_view.xml',
         'security/runbot_security.xml',
         'security/ir.model.access.csv',
         'security/ir.rule.csv',
