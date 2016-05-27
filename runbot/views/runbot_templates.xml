@@ -20,7 +20,7 @@
 
     <!-- remove black bar with switcher d'apps -->
     <template id="inherits_no_black_bar" inherit_id="website.user_navbar" name="Inherits No black user_navbar">
-        <xpath expr="//t[@t-if=&quot;website and menu_data&quot;]" position="attributes">
+        <xpath expr="//nav[@t-if=&quot;website and menu_data&quot;]" position="attributes">
             <attribute name="groups">base.group_website_publisher</attribute>
         </xpath>
     </template>
