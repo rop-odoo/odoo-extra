@@ -19,26 +19,27 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
+from odoo import api, fields, models
 
-class runbot_config_settings(osv.osv_memory):
+
+class RunbotConfigSettings(models.TransientModel):
     _name = 'runbot.config.settings'
     _inherit = 'res.config.settings'
-    _columns = {
-        'default_workers': fields.integer('Total Number of Workers'),
-        'default_running_max': fields.integer('Maximum Number of Running Builds'),
-        'default_timeout': fields.integer('Default Timeout (in seconds)'),
-        'default_starting_port': fields.integer('Starting Port for Running Builds'),
-        'default_domain': fields.char('Runbot Domain'),
-    }
 
-    def get_default_parameters(self, cr, uid, fields, context=None):
-        icp = self.pool['ir.config_parameter']
-        workers = icp.get_param(cr, uid, 'runbot.workers', default=6)
-        running_max = icp.get_param(cr, uid, 'runbot.running_max', default=75)
-        timeout = icp.get_param(cr, uid, 'runbot.timeout', default=1800)
-        starting_port = icp.get_param(cr, uid, 'runbot.starting_port', default=2000)
-        runbot_domain = icp.get_param(cr, uid, 'runbot.domain', default='runbot.odoo.com')
+    default_workers = fields.Integer('Total Number of Workers')
+    default_running_max = fields.Integer('Maximum Number of Running Builds')
+    default_timeout = fields.Integer('Default Timeout (in seconds)')
+    default_starting_port = fields.Integer('Starting Port for Running Builds')
+    default_domain = fields.Char('Runbot Domain')
+
+    @api.model
+    def get_default_parameters(self, fields):
+        ICP = self.env['ir.config_parameter']
+        workers = ICP.get_param('runbot.workers', default=6)
+        running_max = ICP.get_param('runbot.running_max', default=75)
+        timeout = ICP.get_param('runbot.timeout', default=1800)
+        starting_port = ICP.get_param('runbot.starting_port', default=2000)
+        runbot_domain = ICP.get_param('runbot.domain', default='runbot.odoo.com')
         return {
             'default_workers': int(workers),
             'default_running_max': int(running_max),
@@ -47,14 +48,12 @@ class runbot_config_settings(osv.osv_memory):
             'default_domain': runbot_domain,
         }
 
-    def set_default_parameters(self, cr, uid, ids, context=None):
-        config = self.browse(cr, uid, ids[0], context)
-        icp = self.pool['ir.config_parameter']
-        icp.set_param(cr, uid, 'runbot.workers', config.default_workers)
-        icp.set_param(cr, uid, 'runbot.running_max', config.default_running_max)
-        icp.set_param(cr, uid, 'runbot.timeout', config.default_timeout)
-        icp.set_param(cr, uid, 'runbot.starting_port', config.default_starting_port)
-        icp.set_param(cr, uid, 'runbot.domain', config.default_domain)
-
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+    @api.multi
+    def set_default_parameters(self):
+        ICP = self.env['ir.config_parameter']
+        for config in self:
+            ICP.set_param('runbot.workers', config.default_workers)
+            ICP.set_param('runbot.running_max', config.default_running_max)
+            ICP.set_param('runbot.timeout', config.default_timeout)
+            ICP.set_param('runbot.starting_port', config.default_starting_port)
+            ICP.set_param('runbot.domain', config.default_domain)
