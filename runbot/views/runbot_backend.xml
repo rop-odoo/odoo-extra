@@ -231,13 +231,13 @@
     <!-- Cron -->
     <record model="ir.cron" id="repo_cron">
         <field name='name'>Runbot Cron</field>
+        <field name="model_id" ref="model_runbot_repo"/>
+        <field name="state">code</field>
+        <field name="code">model.cron()</field>
         <field name='interval_number'>1</field>
         <field name='interval_type'>minutes</field>
         <field name="numbercall">-1</field>
         <field name="doall" eval="False" />
-        <field name="model">runbot.repo</field>
-        <field name="function">cron</field>
-        <field name="args">()</field>
     </record>
 </data>
 

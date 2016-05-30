@@ -48,7 +48,7 @@
             <field name="view_mode">form</field>
             <field name="target">inline</field>
         </record>
-        <menuitem id="menu_runbot_configuration" name="Runbot" parent="base.menu_config"
+        <menuitem id="menu_runbot_configuration" name="Configuration" parent="runbot.menu_runbot_top"
             sequence="19" action="action_runbot_configuration"/>
 
     </data>
