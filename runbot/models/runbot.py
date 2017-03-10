@@ -200,14 +200,14 @@ class RunbotRepo(models.Model):
 
     @api.model
     def _domain(self):
-        domain = self.env['ir.config_parameter'].get_param('runbot.domain', fqdn())
+        domain = self.env['ir.config_parameter'].sudo().get_param('runbot.domain', fqdn())
         return domain
 
     @api.model
     def _root(self):
         """Return root directory of repository"""
         default = get_resource_path('runbot', 'static')
-        return self.env['ir.config_parameter'].get_param('runbot.root', default)
+        return self.env['ir.config_parameter'].sudo().get_param('runbot.root', default)
 
     @api.multi
     def _git(self, cmd):
