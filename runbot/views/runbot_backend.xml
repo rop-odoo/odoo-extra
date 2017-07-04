@@ -166,7 +166,7 @@
     <record id="view_build_graph" model="ir.ui.view">
         <field name="model">runbot.build</field>
         <field name="arch" type="xml">
-            <graph string="Builds" type="pivot">
+            <graph string="Builds">
                 <field name="create_date" interval="week" type="row"/>
                 <field name="state" type="col"/>
             </graph>
