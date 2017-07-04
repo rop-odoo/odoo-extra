@@ -33,7 +33,7 @@ class RunbotConfigSettings(models.TransientModel):
     default_domain = fields.Char('Runbot Domain')
 
     @api.model
-    def get_default_parameters(self, fields):
+    def get_values(self):
         ICP = self.env['ir.config_parameter']
         workers = ICP.get_param('runbot.workers', default=6)
         running_max = ICP.get_param('runbot.running_max', default=75)
@@ -49,7 +49,7 @@ class RunbotConfigSettings(models.TransientModel):
         }
 
     @api.multi
-    def set_default_parameters(self):
+    def set_values(self):
         ICP = self.env['ir.config_parameter']
         for config in self:
             ICP.set_param('runbot.workers', config.default_workers)
