@@ -1,4 +1,5 @@
-# -*- encoding: utf-8 -*-
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import contextlib
 import datetime
@@ -152,6 +153,7 @@ def local_pgadmin_cursor():
 #----------------------------------------------------------
 # RunBot Models
 #----------------------------------------------------------
+
 
 class RunbotRepo(models.Model):
     _name = "runbot.repo"
@@ -497,6 +499,7 @@ class RunbotBranch(models.Model):
     def create(self, values):
         values.setdefault('coverage', _re_coverage.search(values.get('name') or '') is not None)
         return super(RunbotBranch, self).create(values)
+
 
 class RunbotBuild(models.Model):
     _name = "runbot.build"
@@ -1206,7 +1209,7 @@ class RunbotBuild(models.Model):
             path = os.path.join(build_dir, b)
             if b not in actives and os.path.isdir(path):
                 shutil.rmtree(path)
-        
+
         # cleanup old unused databases
         self.env.cr.execute("select id from runbot_build where state in ('testing', 'running')")
         db_ids = [id[0] for id in self.env.cr.fetchall()]
@@ -1218,7 +1221,7 @@ class RunbotBuild(models.Model):
                      WHERE pg_get_userbyid(datdba) = current_user
                        AND datname ~ '^[0-9]+-.*'
                        AND SUBSTRING(datname, '^([0-9]+)-.*')::int not in %s
-                           
+
                 """, [tuple(db_ids)])
                 to_delete = local_cr.fetchall()
             for db, in to_delete:
@@ -1277,6 +1280,7 @@ class RunbotBuild(models.Model):
             'func': func,
             'line': '0',
         })
+
 
 class RunbotEvent(models.Model):
     _inherit = 'ir.logging'
