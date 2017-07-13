@@ -592,7 +592,7 @@ class RunbotBuild(models.Model):
         extra_info = {'sequence': build.id}
 
         # detect duplicate
-        duplicate_id = None
+        duplicate_build = None
         domain = [
             ('repo_id', '=', build.repo_id.duplicate_id.id),
             ('name', '=', build.name),
